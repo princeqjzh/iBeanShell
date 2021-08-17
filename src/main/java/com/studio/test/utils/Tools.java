@@ -4,7 +4,8 @@ import java.util.Random;
 
 public class Tools {
     public static void main(String[] args) {
-        System.out.println(createIdcard());
+        getPhoneNumber();
+        getMD5("12345678");
     }
 
     /**
@@ -78,6 +79,19 @@ public class Tools {
     private static String getRandomFromArray(String[] strArray) {
         Random random = new Random();
         return strArray[random.nextInt(strArray.length)];
+    }
+
+    public static String getPhoneNumber(){
+        String timestamp = new Long(System.currentTimeMillis()).toString();
+        String phoneNumber = "13" + timestamp.substring(timestamp.length()-9);
+        System.out.println("generate new phone number " + phoneNumber);
+        return phoneNumber;
+    }
+
+    public static String getMD5(String password){
+        String passwordMD5 = MD5Util.MD5Encode(password, "UTF-8");
+        System.out.println("password md5 is " + passwordMD5);
+        return passwordMD5;
     }
 
 }
