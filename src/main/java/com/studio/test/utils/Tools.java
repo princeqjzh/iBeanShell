@@ -3,10 +3,6 @@ package com.studio.test.utils;
 import java.util.Random;
 
 public class Tools {
-    public static void main(String[] args) {
-        getPhoneNumber();
-        getMD5("12345678");
-    }
 
     /**
      * 生成随机身份证号
@@ -82,7 +78,7 @@ public class Tools {
     }
 
     public static String getPhoneNumber(){
-        String timestamp = new Long(System.currentTimeMillis()).toString();
+        String timestamp = Long.toString(System.currentTimeMillis());
         String phoneNumber = "13" + timestamp.substring(timestamp.length()-9);
         System.out.println("generate new phone number " + phoneNumber);
         return phoneNumber;
