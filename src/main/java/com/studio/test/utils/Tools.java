@@ -1,5 +1,9 @@
 package com.studio.test.utils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.Random;
 
 public class Tools {
@@ -88,6 +92,63 @@ public class Tools {
         String passwordMD5 = MD5Util.MD5Encode(password, "UTF-8");
         System.out.println("password md5 is " + passwordMD5);
         return passwordMD5;
+    }
+
+    public static String execRuntime(String cmd) {
+        Process proc = null;
+        int inBuffer, errBuffer;
+        int result = 0;
+        StringBuffer outputReport = new StringBuffer();
+        StringBuffer errorBuffer = new StringBuffer();
+        try {
+            proc = Runtime.getRuntime().exec(cmd);
+        } catch (IOException e) {
+            return "";
+        }
+        try {
+            result = proc.waitFor();
+        } catch (InterruptedException e) {
+            return "";
+        }
+        if (proc != null && null != proc.getInputStream()) {
+            InputStream is = proc.getInputStream();
+            InputStream es = proc.getErrorStream();
+            OutputStream os = proc.getOutputStream();
+            try {
+                while ((inBuffer = is.read()) != -1) {
+                    outputReport.append((char) inBuffer);
+                }
+                while ((errBuffer = es.read()) != -1) {
+                    errorBuffer.append((char) errBuffer);
+                }
+            } catch (IOException e) {
+                return "";
+            }
+            try {
+                is.close();
+                is = null;
+                es.close();
+                es = null;
+                os.close();
+                os = null;
+            } catch (IOException e) {
+                return "";
+            }
+            proc.destroy();
+            proc = null;
+        }
+        if (errorBuffer.length() > 0) {
+            System.err.println("could not finish execution because of error(s).");
+            System.err.println("*** Error : " + errorBuffer.toString());
+            return "";
+        }
+        return outputReport.toString();
+    }
+
+    public static void main(String[] args) {
+        String cmd = "ifconfig";
+        String ret = execRuntime(cmd);
+        System.out.println(ret);
     }
 
 }
